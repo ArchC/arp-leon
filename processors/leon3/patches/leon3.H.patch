@@ -1,0 +1,17 @@
+--- leon3_bcp/leon3.H	2015-01-24 13:07:01.521513000 -0200
++++ leon3/leon3.H	2015-01-25 10:34:11.539978000 -0200
+@@ -55,11 +55,12 @@
+   SC_HAS_PROCESS( leon3 );
+ 
+   //!Constructor.
+-  leon3( sc_module_name name_ ): ac_module(name_), leon3_arch(), ISA(*this), intp_hnd(*this), intp("intp", intp_hnd) {
++  leon3( sc_module_name name_, uint32_t cpu_id_ ): ac_module(name_), leon3_arch(), ISA(*this), intp_hnd(*this), intp("intp", intp_hnd) {
+ 
+     SC_THREAD( behavior );
+     bhv_pc = 0; 
+-    has_delayed_load = false; 
++    has_delayed_load = false;
++    cpu_id = cpu_id_; //!CPU identifier
+     start_up=1;
+     id = 1;
+ 

@@ -1,10 +1,11 @@
 --- leon3_bcp/leon3_arch.H	2015-01-24 13:07:01.521513000 -0200
-+++ leon3/leon3_arch.H	2015-01-24 19:57:03.014389000 -0200
-@@ -24,12 +24,16 @@
++++ leon3/leon3_arch.H	2015-01-25 10:32:30.751974000 -0200
+@@ -24,12 +24,23 @@
  #include  "ac_reg.H"
  #include  "ac_tlm_port.H"
  #include  "ac_tlm_intr_port.H"
 +#include  "leon3_trap_selector.H"
++#include  "ac_tlm_signal_port.H"
   
  //!ArchC class for model-specific architectural resources.
  
@@ -13,6 +14,12 @@
   
 +  //!LEON 3 Trap Selector
 +  leon3_trap_selector trap_selector;
++
++  //!Interruption acknowledge port
++  ac_tlm_signal_port ack_intp;
++
++  //!CPU identifier
++  uint32_t cpu_id;
 +
    //!Program Counter.
    ac_reg<unsigned> ac_pc;
