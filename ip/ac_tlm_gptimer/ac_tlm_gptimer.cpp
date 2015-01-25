@@ -113,6 +113,7 @@ inline void ac_tlm_gptimer::ac_tlm_irq_send( uint32_t id )
 	request.type = WRITE;
 	request.data = (id + BASE_IRQ);
 	request.addr = IRQ_SEND_ADDR;
+	request.dev_id = 0x77;
 
 	response = IRQ_port->transport(request);
 }

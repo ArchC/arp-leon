@@ -59,7 +59,7 @@ int sc_main(int ac, char *av[])
   //!  ISA simulator
   cout << "*Creating SPARC V8 Leon3 Processor" << endl;
   cout << endl;
-  leon3 leon3_cpu0("leon3_cpu0");
+  leon3 leon3_cpu0("leon3_cpu0", 0);
 
   //! Platform IP's
   cout << "*Creating IP Devices:" << endl;
@@ -99,6 +99,8 @@ int sc_main(int ac, char *av[])
  
   /*CPU interruption port*/
   irqmp.CPU_port[0](leon3_cpu0.intp);
+  leon3_cpu0.ack_intp(irqmp.target_export);
+
   /*Connection between peripherials and IRQ Controller*/
   gptimer.IRQ_port(irqmp.target_export);
   uart.IRQ_port(irqmp.target_export);

@@ -55,11 +55,12 @@ public:
   SC_HAS_PROCESS( leon3 );
 
   //!Constructor.
-  leon3( sc_module_name name_ ): ac_module(name_), leon3_arch(), ISA(*this), intp_hnd(*this), intp("intp", intp_hnd) {
+  leon3( sc_module_name name_, uint32_t cpu_id_ ): ac_module(name_), leon3_arch(), ISA(*this), intp_hnd(*this), intp("intp", intp_hnd) {
 
     SC_THREAD( behavior );
     bhv_pc = 0; 
-    has_delayed_load = false; 
+    has_delayed_load = false;
+    cpu_id = cpu_id_; //!CPU identifier
     start_up=1;
     id = 1;
 

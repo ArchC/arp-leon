@@ -67,6 +67,7 @@ void ac_tlm_apbuart::generate_interrupt()
 
    request.type = WRITE;
    request.data = 0x2;
+   request.dev_id = 0x66;
 	//!FIXME:
    request.addr = IRQ_SEND_ADDR;
 	dbg_message("Sent interruption IRQ = 2 to processor\n");

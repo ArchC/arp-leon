@@ -23,6 +23,7 @@
 #include  "ac_regbank.H"
 #include  "ac_tlm_intr_port.H"
 #include  "leon3_trap_selector.H"
+#include  "ac_tlm_signal_port.H"
 
 //!Forward class declaration, needed to compile.
 class leon3_arch;
@@ -33,6 +34,12 @@ public:
  
   //!LEON 3 Trap Selector
   leon3_trap_selector& trap_selector;
+
+  //!Interruption acknowledge port
+  ac_tlm_signal_port& ack_intp;
+
+  //!CPU identifier
+  uint32_t& cpu_id;
 
   //!Program Counter.
   ac_reg<unsigned>& ac_pc;

@@ -58,12 +58,8 @@ void ac_behavior(intp, value)
   }else{
     if( PSR_ET && ((value == 15) || (value > PSR_PIL)) )
     {
-         //!Clear acknowledge interruption
-         //!FIXME: Create a SystemC ack signal instead 
-         MEM.write(0x90000000,0x1C);
-         MEM.write(0x8000020C,value);
-
-         trap_selector.set_interrupt_level(value);
+      ack_intp.signal(cpu_id, value);
+      trap_selector.set_interrupt_level(value);
     }
   }
 };

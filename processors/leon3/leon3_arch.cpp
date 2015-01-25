@@ -18,6 +18,7 @@
 leon3_arch::leon3_arch() :
   ac_arch_dec_if<leon3_parms::ac_word, leon3_parms::ac_Hword>(leon3_parms::AC_MAX_BUFFER),
   trap_selector(),
+  ack_intp("ack_intp"),
   ac_pc("ac_pc", 0),
   MEM_port("MEM_port", 33554432U),
   MEM(*this, MEM_port),

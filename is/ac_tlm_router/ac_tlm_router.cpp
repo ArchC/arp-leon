@@ -70,9 +70,10 @@ ac_tlm_rsp ac_tlm_router::transport( const ac_tlm_req &request ) {
      case 8:
      response.data = 0x0;
     }
-    printf("MEM Controler Register Access %d\n type: %d", (request.addr & 0xf), request.type);
+  //  printf("MEM Controler Register Access %d\n type: %d", (request.addr & 0xf), request.type);
   endian_swap32(response.data);
   }else
+   //printf("request devid %d\n ", request.dev_id);
     if(request.addr >= RAM_BASEADDR && request.addr < RAM_ENDADDR){
     u_request.data = request.data;
     u_request.type = request.type;
@@ -102,6 +103,7 @@ ac_tlm_rsp ac_tlm_router::transport( const ac_tlm_req &request ) {
      endian_swap32(u_request.data);
      u_request.type = request.type;
      u_request.dev_id = request.dev_id;
+     u_request.dev_id =+ 20;
      u_request.addr = request.addr;
      response = IRQMP_port->transport(u_request);
      endian_swap32(response.data);
