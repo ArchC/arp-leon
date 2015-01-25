@@ -1701,21 +1701,22 @@ void ac_behavior( jmpl_reg ){
 
 //!Instruction wry_reg behavior method.
 void ac_behavior( wry_reg ){
-  if(rd == 0){
-     #ifdef DEBUG_MODEL 
-     dbg_printf("wr %s, %s, %%y\n", reg_alias[rs1], reg_alias[rs2]);
-     #endif
-     Y.write(readReg(rs1) ^ readReg(rs2));
-  }else if(rd == 17){
-     #ifdef DEBUG_MODEL 
-     dbg_printf("wr %s, %s, %%asr%d\n", reg_alias[rs1], reg_alias[rs2],rd);
-     #endif
-     ASR[17] = (readReg(rs1) ^ readReg(rs2));
-  }else{
-    printf("Unknown Register Access\n");
-    stop(EXIT_FAILURE);
+  switch(rd) {
+    case 0 : 
+       Y.write(readReg(rs1) ^ readReg(rs2));
+       #ifdef PRINT_INSTRUCTION  
+       dbg_printf("wr %%y, 0x%x\n",readReg(rs1) ^ simm13 );
+       #endif
+    break;
+    case 1 ... 31 :
+      #ifdef PRINT_INSTRUCTION 
+      dbg_printf("rd %%asr%d, %s\n",rs1, reg_alias[rd]);
+      #endif
+      ASR[rd] = (readReg(rs1) ^ readReg(rs2));
+    break;
+    default:
+      stop(EXIT_FAILURE);
   }
-
   ac_pc = npc;
   npc = npc + 4;
 }
@@ -2976,18 +2977,21 @@ void ac_behavior( restore_imm ){
 
 //!Instruction rdy behavior method.
 void ac_behavior( rdy ){
-  if(rs1 == 0){
-    #ifdef PRINT_INSTRUCTION  
-    dbg_printf("rd %%y, %s \n",reg_alias[rd]);
-    #endif
-    writeReg(rd, Y.read());
-  }else if(rs1 == 17){
-    #ifdef PRINT_INSTRUCTION 
-    dbg_printf("rd %%asr%d, %s\n",rs1, reg_alias[rd]);
-    #endif
-    writeReg(rd, ASR[17]);
-  }else{
-    stop(EXIT_FAILURE);
+  switch(rs1) {
+    case 0 : 
+       #ifdef PRINT_INSTRUCTION  
+       dbg_printf("rd %%y, %s \n",reg_alias[rd]);
+       #endif
+       writeReg(rd, Y.read());
+    break;
+    case 1 ... 31 :
+      #ifdef PRINT_INSTRUCTION 
+      dbg_printf("rd %%asr%d, %s\n",rs1, reg_alias[rd]);
+      #endif
+      writeReg(rd, ASR[rs1]);
+    break;
+    default:
+      stop(EXIT_FAILURE);
   }
   ac_pc = npc;
   npc = npc + 4;
@@ -2995,18 +2999,21 @@ void ac_behavior( rdy ){
 
 //!Instruction wry_imm behavior method.
 void ac_behavior( wry_imm ){
-  if(rd == 0){
-     Y.write(readReg(rs1) ^ simm13);
-     #ifdef PRINT_INSTRUCTION  
-     dbg_printf("wr %%y, 0x%x\n",readReg(rs1) ^ simm13 );
-     #endif
-  }else if(rd == 17){//Maybe should not happens
-     ASR[17] = (readReg(rs1) ^ simm13);
-     #ifdef PRINT_INSTRUCTION 
-     dbg_printf("wr %%asr%d, 0x%x\n",rd, readReg(rs1) ^ simm13 );
-     #endif
-  }else{
-    stop(EXIT_FAILURE);
+  switch(rd) {
+    case 0 : 
+       Y.write(readReg(rs1) ^ simm13);
+       #ifdef PRINT_INSTRUCTION  
+       dbg_printf("wr %%y, 0x%x\n",readReg(rs1) ^ simm13 );
+       #endif
+    break;
+    case 1 ... 31 :
+      #ifdef PRINT_INSTRUCTION 
+      dbg_printf("rd %%asr%d, %s\n",rs1, reg_alias[rd]);
+      #endif
+      ASR[rd] = (readReg(rs1) ^ simm13);
+    break;
+    default:
+      stop(EXIT_FAILURE);
   }
   ac_pc = npc;
   npc = npc + 4;
