@@ -1,0 +1,40 @@
+# ####################################################
+# UART Test
+# ####################################################
+
+CC = sparc-elf-gcc
+CFLAGS = -msoft-float -specs=archc -g
+LDFLAGS = -lm
+
+TARGET = 
+INC_DIR := -I.
+
+SRCS := 000.uart.test.c 001.uart.test.c 002.uart.test.c
+OBJS := $(SRCS:.c=.o)
+
+#------------------------------------------------------
+.SILENT:
+
+#------------------------------------------------------
+.SUFFIXES: .o .c .h
+
+#------------------------------------------------------
+all: $(OBJS)
+	$(CC) 000.uart.test.o $(CFLAGS) -o 000.uart.test.x $(LDFLAGS)
+	$(CC) 001.uart.test.o $(CFLAGS) -o 001.uart.test.x $(LDFLAGS)
+	$(CC) 002.uart.test.o $(CFLAGS) -o 002.uart.test.x $(LDFLAGS)
+#------------------------------------------------------
+clean:
+	rm -f *.o *~ *x
+#------------------------------------------------------
+distclean: clean
+#------------------------------------------------------
+bin:
+	tar xzf serialtest-bin.tgz
+#------------------------------------------------------
+.c.o:
+	$(CC) -c $(CFLAGS) $(INC_DIR) -c $<
+	
+
+
+

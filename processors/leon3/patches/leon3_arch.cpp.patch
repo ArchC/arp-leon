@@ -1,0 +1,10 @@
+--- leon3_bcp/leon3_arch.cpp	2015-01-24 13:07:01.525513000 -0200
++++ leon3/leon3_arch.cpp	2015-01-24 19:57:52.062391000 -0200
+@@ -17,6 +17,7 @@
+ 
+ leon3_arch::leon3_arch() :
+   ac_arch_dec_if<leon3_parms::ac_word, leon3_parms::ac_Hword>(leon3_parms::AC_MAX_BUFFER),
++  trap_selector(),
+   ac_pc("ac_pc", 0),
+   MEM_port("MEM_port", 33554432U),
+   MEM(*this, MEM_port),

@@ -1,0 +1,94 @@
+--- leon3_bcp/leon3.cpp	2015-01-24 13:07:01.521513000 -0200
++++ leon3/leon3.cpp	2015-01-24 22:44:58.038748000 -0200
+@@ -27,13 +27,8 @@
+ 
+   for (;;) {
+ 
+-  bhv_pc = ac_pc;
+-  if( bhv_pc >= APP_MEM->get_size()){
+-    cerr << "ArchC: Address out of bounds (pc=0x" << hex << bhv_pc << ")." << endl;
+-    stop();
+-    return;
+-  }
+-  else {
++    bhv_pc = ac_pc;
++
+     if( start_up ){
+       decode_pc = ac_pc;
+       start_up=0;
+@@ -41,18 +36,28 @@
+     else{ 
+       decode_pc = bhv_pc;
+     }
+- 
+-        quant = 0;
+-      instr_dec = (ISA.decoder)->Decode(reinterpret_cast<unsigned char*>(buffer), quant);
+-      instr_vec = new ac_instr<leon3_parms::AC_DEC_FIELD_NUMBER>( instr_dec);
+-      ins_id = instr_vec->get(IDENT);
++    
++    MEM.write(0x90000000,(PSR.read() & 0x80) ? 0x9 : 0x8);
++    //!Check if is a pending trap and execute the trap routine
++    if(trap_selector.is_trap_mode()) {
++       intp_hnd.execute_trap();
++       decode_pc = ac_pc;
++    }
+ 
+-      if( ins_id == 0 ) {
+-        cerr << "ArchC Error: Unidentified instruction. " << endl;
+-        cerr << "PC = " << hex << decode_pc << dec << endl;
++    quant = 0;
++    instr_dec = (ISA.decoder)->Decode(reinterpret_cast<unsigned char*>(buffer), quant);
++    instr_vec = new ac_instr<leon3_parms::AC_DEC_FIELD_NUMBER>( instr_dec);
++    ins_id = instr_vec->get(IDENT);
++
++    if(trap_selector.is_trap_mode())
++      ac_annul_sig = 1;
++
++    if( ins_id == 0 && !ac_annul_sig) {
++        cerr << "[ERROR] Unidentified instruction " << endl;
++        cerr << "at " << hex << decode_pc << dec << endl;
+         stop();
+         return;
+-      }
++    }
+ 
+     ac_pc = decode_pc;
+ 
+@@ -799,23 +804,23 @@
+     delete instr_vec;
+     if ((!ac_wait_sig) && (!ac_annul_sig)) ac_instr_counter+=1;
+     ac_annul_sig = 0;
+-  }
+-//!Updating Regs for behavioral simulation.
+-  if(!ac_wait_sig){
+-    bhv_pc = ac_pc;
+-  }
+-  if (ac_stop_flag) {
+-    return;
+-  }
+-  else {
+-    if (instr_in_batch < instr_batch_size) {
+-      instr_in_batch++;
++    
++    //!Updating Regs for behavioral simulation.
++    if(!ac_wait_sig){
++      bhv_pc = ac_pc;
++    }
++    if (ac_stop_flag) {
++      return;
+     }
+     else {
+-      instr_in_batch = 0;
+-      wait(1, SC_NS);
++      if (instr_in_batch < instr_batch_size) {
++        instr_in_batch++;
++      }
++      else {
++        instr_in_batch = 0;
++        wait(1, SC_NS);
++      }
+     }
+-  }
+ 
+ } // for (;;)
+ } // behavior()

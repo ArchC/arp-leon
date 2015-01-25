@@ -1,0 +1,10 @@
+--- leon3_bcp/leon3_intr_handlers.H	2015-01-24 13:07:01.521513000 -0200
++++ leon3/leon3_intr_handlers.H	2015-01-24 22:30:44.426718000 -0200
+@@ -30,6 +30,7 @@
+   explicit leon3_intp_handler(leon3_arch& ref) : leon3_arch_ref(ref) {}
+ 
+   void handle(uint32_t value);
++  void execute_trap();
+ 
+ };
+ 

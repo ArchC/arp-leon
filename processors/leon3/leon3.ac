@@ -1,0 +1,42 @@
+/**
+ * /file      leon3.ac
+ *            The ArchC Team
+ *            http://www.archc.org/
+ *
+ *            Computer Systems Laboratory (LSC)
+ *            IC-UNICAMP
+ *            http://www.lsc.ic.unicamp.br
+ * 
+ * /brief     The ArchC LEON 3 functional model.
+ * 
+ * /attention Copyright (C) 2002-2015 --- The ArchC Team
+ * /author    Rogerio Alves Cardoso
+ *
+ */
+
+AC_ARCH(leon3){
+  ac_tlm_port MEM:32M;
+  ac_tlm_intr_port intp;
+  ac_reg intr_reg;
+
+  ac_regbank RB:128;  //!< 8 Windows Register buffer
+  ac_regbank REGS:32; //!< General Purpose Registers
+
+  
+
+  ac_reg PSR;        //!< Processor State Register
+  ac_reg FSR;        //!< FPU State Register
+  ac_reg TBR;        //!< Trap Base Register
+  ac_reg WIM;        //!< Windows Invalid Mask Register
+  ac_reg Y;          //!< Y Register
+
+  ac_regbank ASR:32; //!< Anciliary Register Bank
+  
+  ac_reg npc;
+  ac_wordsize 32;
+
+  ARCH_CTOR(leon3){
+    ac_isa("leon3_isa.ac");
+    set_endian("big");
+  };
+};

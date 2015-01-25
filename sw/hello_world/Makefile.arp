@@ -1,0 +1,39 @@
+# ####################################################
+# Hello World
+# ####################################################
+
+CC = sparc-elf-gcc
+CFLAGS = -msoft-float -specs=archc -ggdb
+LDFLAGS = -lm
+
+TARGET = hello_world.x
+INC_DIR := -I.
+
+SRCS := hello_world.c fibonacci.c
+OBJS := $(SRCS:.c=.o)
+
+#------------------------------------------------------
+.SILENT:
+
+#------------------------------------------------------
+.SUFFIXES: .o .c .h
+
+#------------------------------------------------------
+all: $(OBJS)
+	$(CC) hello_world.o $(CFLAGS) -o hello_world.x $(LDFLAGS)
+	$(CC) fibonacci.o $(CFLAGS) -o fibonacci.x $(LDFLAGS)
+#------------------------------------------------------
+clean:
+	rm -f *.o *~ $(TARGET)
+#------------------------------------------------------
+distclean: clean
+#------------------------------------------------------
+bin:
+	tar xzf helloworld-bin.tgz
+#------------------------------------------------------
+.c.o:
+	$(CC) -c $(CFLAGS) $(INC_DIR) -c $<
+	
+
+
+

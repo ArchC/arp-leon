@@ -1,0 +1,22 @@
+--- leon3_bcp/leon3_arch_ref.cpp	2015-01-24 13:07:01.521513000 -0200
++++ leon3/leon3_arch_ref.cpp	2015-01-24 19:32:52.458338000 -0200
+@@ -18,6 +18,17 @@
+ 
+ //!/Default constructor.
+ leon3_arch_ref::leon3_arch_ref(leon3_arch& arch) : ac_arch_ref<leon3_parms::ac_word, leon3_parms::ac_Hword>(arch),
+-  ac_pc(arch.ac_pc),
+-  MEM(arch.MEM),   intr_reg(arch.intr_reg),   RB(arch.RB),   REGS(arch.REGS),   PSR(arch.PSR),   FSR(arch.FSR),   TBR(arch.TBR),   WIM(arch.WIM),   Y(arch.Y),   ASR(arch.ASR),   npc(arch.npc) {}
++												   trap_selector(arch.trap_selector),
++  												   ac_pc(arch.ac_pc),
++  												   MEM(arch.MEM),   
++  												   intr_reg(arch.intr_reg),   
++  												   RB(arch.RB),   
++  												   REGS(arch.REGS),   
++  												   PSR(arch.PSR),   
++  												   FSR(arch.FSR),   
++  												   TBR(arch.TBR),   
++  												   WIM(arch.WIM),   
++  												   Y(arch.Y),   
++  												   ASR(arch.ASR),   
++  												   npc(arch.npc) { }
+ 
