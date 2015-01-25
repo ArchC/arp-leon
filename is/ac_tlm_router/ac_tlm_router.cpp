@@ -138,7 +138,7 @@ ac_tlm_rsp ac_tlm_router::transport( const ac_tlm_req &request ) {
      endian_swap32(response.data);
      }else{
       cout << "ERROR::The requested address "  << hex << request.addr << " is beyond of address map" << endl;
-      response.data = 0x0; //response with 0x0
+      exit(1);
      }
 
   return response;

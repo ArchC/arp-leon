@@ -50,6 +50,8 @@ ac_tlm_irqmp::ac_tlm_irqmp( sc_module_name module_name, uint32_t ncpu ):
   irqmp->level     = 0x0;
   irqmp->clear     = 0x0;
   irqmp->status    = 0x0;
+  irqmp->status    |= ((ncpu-1) << 28); //Set number of CPUs in system
+  irqmp->status    |= (1 << 27); //Enable broadcast ?
   irqmp->broadcast = 0x0;
 
   for (int i = 0; i < MAX_CPU; i++)
@@ -187,13 +189,15 @@ ac_tlm_rsp_status ac_tlm_irqmp::irqmp_write(const uint32_t &addr , const uint32_
         irqmp->pending &= ~LEON_HARD_INT(d);
         return SUCCESS;   
     case IRQMP_MPSTATUS_OFFSET:   //!0x10
+        d &= 0xFFFF;
+        irqmp->status &= (~d);
         return SUCCESS;
     case IRQMP_BROADCAST_OFFSET:  //!0x14
         d &= 0xFFFE;
-           irqmp->broadcast = d;
-           for (int i = 0; i < cpu_counter; i++)
-               irqmp->force[i] |= LEON_HARD_INT(d);
-           return SUCCESS;     
+         irqmp->broadcast = d;
+         for (int i = 0; i < cpu_counter; i++)
+             irqmp->force[i] |= LEON_HARD_INT(d);
+         return SUCCESS;     
     default:
         break;
    }

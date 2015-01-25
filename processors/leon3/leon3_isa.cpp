@@ -867,16 +867,74 @@ void ac_behavior( stda ){
 }
 
 //!Instruction ldstuba behavior method.
-void ac_behavior( ldstuba ){}
+void ac_behavior( ldstuba ){
+  #ifdef PRINT_INSTRUCTION 
+  dbg_printf("ldstuba %s, [%s + %s]\n", reg_alias[rd], reg_alias[rs1], reg_alias[rs2]);
+  #endif
+  if (is == 1)
+  {
+    trap_selector.set_illegal_instruction(true); 
+  } else if (PSR_S == 0) {
+    trap_selector.set_privileged_instruction(true); 
+  } else {
+    //!wait for lock(s) to be lifted
+    while ((pb_block_ldst_byte == 1) || (pb_block_ldst_word == 1)) 
+    {
+     /*
+       an implementation actually need only block when another LDSTUB or SWAP
+      is pending on the same byte in memory as the one addressed by this LDSTUB
+    */
+    }
+
+    #ifdef WITH_SRMMU
+    if(asi == 0x1) //DATA CACHE FORCE MISS
+       asi = (PSR.read() & 0x80) ? 0xB : 0xA;
+    MEM.write(0x90000000, asi);
+    #endif
+
+    //!Acquire the lock
+    pb_block_ldst_byte = 1;
+
+    uint32_t addr = readReg(rs1) + readReg(rs2);
+    uint32_t data = MEM.read_byte(addr);
+
+    //!Release the lock
+    pb_block_ldst_byte = 0;
+
+    if(!trap_selector.is_trap_mode())
+    { 
+      MEM.write_byte(addr, 0xFF);
+
+      if(!trap_selector.is_trap_mode())
+      {
+        writeReg(rd, data & 0xFF);
+        ac_pc = npc;
+        npc = npc + 4;
+      }
+    }
+  } //else
+}
 
 //!Instruction ldsha behavior method.
-void ac_behavior( ldsha ){}
+void ac_behavior( ldsha ){
+  //TODO:
+  printf("unimplemented instruction ldsha\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction ldsba behavior method.
-void ac_behavior( ldsba ){}
+void ac_behavior( ldsba ){
+  //TODO:
+  printf("unimplemented instruction ldsba\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction swapa behavior method.
-void ac_behavior( swapa ){}
+void ac_behavior( swapa ){
+  //TODO:
+  printf("unimplemented instruction swapa\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction stb_reg behavior method.
 void ac_behavior( stb_reg ){
@@ -1156,10 +1214,18 @@ void ac_behavior( addxcc_reg ){
 }
 
 //!Instruction taddcc_reg behavior method.
-void ac_behavior( taddcc_reg ){}
+void ac_behavior( taddcc_reg ){
+  //TODO:
+  printf("unimplemented instruction taddcctv_reg\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction taddcctv_reg behavior method.
-void ac_behavior( taddcctv_reg ){}
+void ac_behavior( taddcctv_reg ){
+  //TODO:
+  printf("unimplemented instruction taddcctv_reg\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction sub_reg behavior method.
 void ac_behavior( sub_reg ){
@@ -1225,10 +1291,18 @@ void ac_behavior( subxcc_reg ){
 }
 
 //!Instruction tsubcc_reg behavior method.
-void ac_behavior( tsubcc_reg ){}
+void ac_behavior( tsubcc_reg ){
+  //TODO:
+  printf("unimplemented instruction tsubcc_reg\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction tsubcctv_reg behavior method.
-void ac_behavior( tsubcctv_reg ){}
+void ac_behavior( tsubcctv_reg ){
+  //TODO:
+  printf("unimplemented instruction tsubcctv_reg\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction and_reg behavior method.
 void ac_behavior( and_reg ){
@@ -1630,10 +1704,12 @@ void ac_behavior( sdiv_reg ){
     //!result overflowed 32 bits; return largest appropriate integer 
     bool temp_V = (((tmp >> 31) == 0) |
 		 ((tmp >> 31) == -1LL)) ? 0 : 1;
-    if (temp_V > 0)
-        result = 0x7FFFFFFF; //!2^31 - 1
-    else 
-        result = 0x80000000; //!-2^31
+    if (temp_V) {
+       if(tmp > 0)
+          result = 0x7FFFFFFF; //!2^31 - 1
+      else 
+          result = 0x80000000; //!-2^31
+    }
 
     writeReg(rd, result);
 
@@ -1662,10 +1738,12 @@ void ac_behavior( sdivcc_reg ){
     //!result overflowed 32 bits; return largest appropriate integer 
     bool temp_V = (((tmp >> 31) == 0) |
 		 ((tmp >> 31) == -1LL)) ? 0 : 1;
-    if (temp_V)
-        result = 0x7FFFFFFF; //!2^31 - 1
-    else 
-        result = 0x80000000; //!-2^31
+    if (temp_V) {
+       if(tmp > 0)
+          result = 0x7FFFFFFF; //!2^31 - 1
+      else 
+          result = 0x80000000; //!-2^31
+    }
 
     //!Update PSR integer condition codes
     SET_PSRicc_N(result >> 31);
@@ -1713,6 +1791,8 @@ void ac_behavior( wry_reg ){
       dbg_printf("rd %%asr%d, %s\n",rs1, reg_alias[rd]);
       #endif
       ASR[rd] = (readReg(rs1) ^ readReg(rs2));
+      if(rd == 19)
+        printf("power down mode unimplemented %d\n", ASR[19]);
     break;
     default:
       stop(EXIT_FAILURE);
@@ -2371,10 +2451,12 @@ void ac_behavior( sdiv_imm ){
     //!result overflowed 32 bits; return largest appropriate integer 
     bool temp_V = (((tmp >> 31) == 0) |
 		 ((tmp >> 31) == -1LL)) ? 0 : 1;
-    if (temp_V > 0)
-        result = 0x7FFFFFFF; //!2^31 - 1
-    else 
-        result = 0x80000000; //!-2^31
+    if (temp_V) {
+       if(tmp > 0)
+          result = 0x7FFFFFFF; //!2^31 - 1
+      else 
+          result = 0x80000000; //!-2^31
+    }
 
     writeReg(rd, result);
 
@@ -2403,10 +2485,12 @@ void ac_behavior( sdivcc_imm ){
     //!result overflowed 32 bits; return largest appropriate integer 
     bool temp_V = (((tmp >> 31) == 0) |
 		 ((tmp >> 31) == -1LL)) ? 0 : 1;
-    if (temp_V)
-        result = 0x7FFFFFFF; //!2^31 - 1
-    else 
-        result = 0x80000000; //!-2^31
+    if (temp_V) {
+       if(tmp > 0)
+          result = 0x7FFFFFFF; //!2^31 - 1
+      else 
+          result = 0x80000000; //!-2^31
+    }
 
     //!Update PSR integer condition codes
     SET_PSRicc_N(result >> 31);
@@ -2841,10 +2925,18 @@ void ac_behavior( addxcc_imm ){
 }
 
 //!Instruction taddcc_imm behavior method.
-void ac_behavior( taddcc_imm ){}
+void ac_behavior( taddcc_imm ){
+  //TODO:
+  printf("unimplemented instruction taddcc_imm\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction taddcctv_imm behavior method.
-void ac_behavior( taddcctv_imm ){}
+void ac_behavior( taddcctv_imm ){
+  //TODO:
+  printf("unimplemented instruction taddcctv_imm\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction sub_imm behavior method.
 void ac_behavior( sub_imm ){
@@ -2910,10 +3002,18 @@ void ac_behavior( subxcc_imm ){
 }
 
 //!Instruction tsubcc_imm behavior method.
-void ac_behavior( tsubcc_imm ){}
+void ac_behavior( tsubcc_imm ){
+  //TODO:
+  printf("unimplemented instruction tsubcc_imm\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction tsubcctv_imm behavior method.
-void ac_behavior( tsubcctv_imm ){}
+void ac_behavior( tsubcctv_imm ){
+  //TODO:
+  printf("unimplemented instruction tsubcctv_imm\n");
+  stop(EXIT_FAILURE);
+}
 
 //!Instruction jmpl_imm behavior method.
 void ac_behavior( jmpl_imm ){
@@ -2989,6 +3089,8 @@ void ac_behavior( rdy ){
       dbg_printf("rd %%asr%d, %s\n",rs1, reg_alias[rd]);
       #endif
       writeReg(rd, ASR[rs1]);
+      if(rd == 19)
+        printf("Read ASR19 %d\n", ASR[rs1]);
     break;
     default:
       stop(EXIT_FAILURE);
@@ -3011,6 +3113,8 @@ void ac_behavior( wry_imm ){
       dbg_printf("rd %%asr%d, %s\n",rs1, reg_alias[rd]);
       #endif
       ASR[rd] = (readReg(rs1) ^ simm13);
+      if(rd == 19)
+        printf("power down mode unimplemented %d\n", ASR[19]);
     break;
     default:
       stop(EXIT_FAILURE);
