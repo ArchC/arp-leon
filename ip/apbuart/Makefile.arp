@@ -2,10 +2,10 @@
 # UART with a terminal interface (netcat)
 # ####################################################
 
-TARGET=ac_tlm_apbuart
+TARGET=apbuart
 INC_DIR += -I. -I$(ARCHC_PATH)/install/include/archc -I$(SYSTEMC)/install/include -I$(TLM_PATH)
 
-SRCS := ac_tlm_apbuart.cpp socket.cpp serversocket.cpp
+SRCS := apbuart.cpp socket.cpp serversocket.cpp
 OBJS := $(SRCS:.cpp=.o)
 
 #------------------------------------------------------

@@ -25,7 +25,7 @@ const char *archc_options="-ndc ";
 #include  "leon3.H"
 #include  "ac_tlm_mem.h"
 #include  "ac_tlm_router.h"
-#include  "ac_tlm_apbuart.h"
+#include  "apbuart.h"
 #include  "ac_tlm_gptimer.h"
 #include  "ac_tlm_irqmp.h"
 #include  "pnp.h" //plug and play config
@@ -39,7 +39,7 @@ const char *archc_options="-ndc ";
 
 using user::ac_tlm_mem;
 using user::ac_tlm_router;
-using user::ac_tlm_apbuart;
+using user::apbuart;
 using user::ac_tlm_gptimer;
 using user::ac_tlm_irqmp;
 #ifdef WITH_SRMMU
@@ -91,7 +91,7 @@ int sc_main(int ac, char *av[])
 
   cout << "Creating APBUART" << endl;
   cout << endl;
-  ac_tlm_apbuart uart("uart");
+  apbuart uart("uart");
   cout << endl;
   /*Clock connections with peripherials*/
   gptimer.clk(p_clock);
