@@ -1,0 +1,39 @@
+-------------------------------------------------------------------------------
+README
+-------------------------------------------------------------------------------
+This is a beta release distributed WITHOUT WARRANTY OF ANY KIND, either express
+or implied.
+
+This is ARP LEON3 Single CPU Platform. It consists of a Leon3/Sparc V8 processor 
+simulator tied to grlib components by ArchC 2.0 TLM port. This platform uses the 
+following component and buses:ju
+
+LEON3:   A LEON3/SPARC V8 CPU with a full Integer Unit and Traps/Interruption
+		 support.
+IRQMP:   Interrupt multiprocessor Controller
+Memory:  A generic memory to simulate RAM/ROM types
+GPTIMER: General Purpose Timer Unit
+APBUART: UART unit to print serial I/O
+Router:  A simple Router to simulate
+SRMMU:   A Memory Management Unit
+
+This platform can boot and run a Linux 2.0 and 2.6 kernel and has a partial 
+support to SMP (Simetric Multiprocessing) and partial support to kernel 3.0.
+Some patches and modifications have to be applied to generated acsim simulator 
+to support many  features due some restrictions. At SW folder we have some 
+code and kernel image samples.
+
+Run this example:
+- Install ARP
+  - See toplevel README for notes on system requirements
+- Unpack the platform package (probably done :)
+  $./arp --unpack leon3.arp.pack
+- Edit toplevel Makefile
+  - Change the environment variables to correctly point ARCHC, SYSTEMC and TLM
+  - Change PLATFORM to leon3.01
+- Run example
+  $make run
+ 
+Changelog
+-----------------------------------------------------------------------------
+2015.02.xx - First beta released

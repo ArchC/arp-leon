@@ -1,5 +1,0 @@
-IP := ac_tlm_mem apbuart ac_tlm_gptimer ac_tlm_irqmp ac_tlm_srmmu
-IS := ac_tlm_router
-PROCESSOR := leon3
-SW := 
-WRAPPER := 
