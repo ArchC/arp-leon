@@ -3,7 +3,7 @@
 # ####################################################
 
 TARGET=irqmp
-INC_DIR += -I. -I$(ARCHC_PATH)/install/include/archc -I$(SYSTEMC)/install/include -I$(TLM_PATH)
+INC_DIR += -I. -I$(ARCHC_PATH)/include/archc -I$(SYSTEMC)/include -I$(TLM_PATH)
 
 SRCS := irqmp.cpp
 OBJS := $(SRCS:.cpp=.o)

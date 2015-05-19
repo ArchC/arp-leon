@@ -19,19 +19,19 @@
 export HOST_OS:= linux64
 
 # SystemC installation path
-export SYSTEMC :=  /opt/systemc-2.3.1/install
+export SYSTEMC :=  /home/max/ArchC/tools/systemc/2.3.1/install
+
+# ArchC installation path
+export ARCHC_PATH := /home/max/ArchC/archc/2.2.0/install
 
 # SystemC library path
 export LD_LIBRARY_PATH:=$(SYSTEMC)/lib-linux64:$(LD_LIBRARY_PATH)
 
 # TLM installation path (tlm.h)
-export TLM_PATH := /opt/systemc-2.3.1/install/include
-
-# ArchC installation path
-export ARCHC_PATH := /opt/archc-2.2
+export TLM_PATH := $(SYSTEMC)/include
 
 # ArchC bin (acsim, accsim) tools
-export PATH:=/opt/archc-2.2/compilers/bin:/opt/archc-2.2/bin:$(PATH)
+export PATH:=$(ARCHC_PATH)/bin:$(PATH)
 
 export PLATFORM := leon3.01
 export ARP:=$(PWD)
@@ -43,13 +43,13 @@ include platforms/$(PLATFORM)/defs.arp
 # Normaly you don't need to edit the lines bellow
 #-------------------------------------------------------------------------
 
-export LIB_DIR:=-L $(SYSTEMC)/lib-$(HOST_OS) -L $(ARCHC_PATH)/install/lib \
+export LIB_DIR:=-L $(SYSTEMC)/lib-$(HOST_OS) -L $(ARCHC_PATH)/lib \
 	$(foreach ip, $(IP), -L $(ARP)/ip/$(ip)) \
 	$(foreach is, $(IS), -L $(ARP)/is/$(is)) \
 	$(foreach wrapper, $(WRAPPER), -L $(ARP)/wrappers/$(wrapper)) \
 	$(foreach processor, $(PROCESSOR), -L $(ARP)/processors/$(processor))
 
-export INC_DIR:=-I $(SYSTEMC)/include -I $(ARCHC_PATH)/install/include/archc -I $(TLM_PATH) \
+export INC_DIR:=-I $(SYSTEMC)/include -I $(ARCHC_PATH)/include/archc -I $(TLM_PATH) \
 	$(foreach ip, $(IP), -I $(ARP)/ip/$(ip)) \
 	$(foreach is, $(IS), -I $(ARP)/is/$(is)) \
 	$(foreach wrapper, $(WRAPPER), -I $(ARP)/wrappers/$(wrapper)) \
