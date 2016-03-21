@@ -1,7 +1,7 @@
 README
 ============
 
-**DEPREACTED PROJECT**
+**DEPRECATED PROJECT**
 
 This project uses the old project ARP (ArchC Referece Plataform) to boot the Linux image 
 using the SPARC processor. 
@@ -38,22 +38,22 @@ make
 make run
 ```
 
-* When the ``waiting for connection on port...`` appears, open a new terminal a type:
+* When the ``waiting for connection on port...`` appears, open a new terminal and type:
 
 ```bash
 nc localhost 6000
 ```
 
-* In the former terminal, when the ``program load > `` appears, type:
+* In the terminal you ran the platform, when the ``program load > `` appears, type:
 
 ```bash
 ../../sw/linux_images/linux-2.0.x.bin
 ```
 
-Now, the linux will be load. Other images can be loaded. See **sw/linux_images** content. 
+Now, the platform will load a linux image. Other images can be loaded as well. See the contents of **sw/linux_images**. 
 
 * After completing the boot, go to the terminal that you previously typed ``nc localhost 6000`` and enjoy
-your simulated terminal.
+your guest linux system.
 
 
 
