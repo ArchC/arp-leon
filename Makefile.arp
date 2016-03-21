@@ -22,7 +22,7 @@ export HOST_OS:= linux64
 export SYSTEMC :=  /home/max/ArchC/tools/systemc/2.3.1/install
 
 # ArchC installation path
-export ARCHC_PATH := /home/max/ArchC/archc/2.2.0/install
+export ARCHC_PATH := /home/max/ArchC/archc/github/2.2.0/
 
 # SystemC library path
 export LD_LIBRARY_PATH:=$(SYSTEMC)/lib-linux64:$(LD_LIBRARY_PATH)
